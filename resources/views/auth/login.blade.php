@@ -13,29 +13,152 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}" crossorigin="anonymous">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e1e2d 0%, #181824 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .container {
+            padding: 20px;
+        }
+        
+        .card {
+            background-color: #27293d;
+            border: 1px solid #2d2d43;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin: 0 auto;
+            max-width: 100%;
+        }
+        
+        .text-muted {
+            color: #b8b9c3 !important;
+        }
+        
+        .form-control {
+            background-color: #1a1a27;
+            border-color: #2d2d43;
+            color: #e0e0e0;
+            border-radius: 5px;
+            height: 45px;
+        }
+        
+        .form-control:focus {
+            background-color: #1a1a27;
+            border-color: #3699ff;
+            color: #e0e0e0;
+            box-shadow: 0 0 0 0.2rem rgba(54, 153, 255, 0.25);
+        }
+        
+        .input-group-text {
+            background-color: #3699ff;
+            color: white;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            padding: 0 15px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(118deg, #3699ff, #5a61f4);
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(54, 153, 255, 0.4);
+            height: 45px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(54, 153, 255, 0.5);
+        }
+        
+        .btn-link {
+            color: #3699ff;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .btn-link:hover {
+            color: #5a61f4;
+            text-decoration: none;
+        }
+        
+        .brand-text {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 20px rgba(54, 153, 255, 0.7);
+            transition: all 0.5s ease;
+            margin-bottom: 2rem;
+        }
+        
+        .brand-text:hover {
+            text-shadow: 0 0 30px rgba(54, 153, 255, 0.9);
+        }
+        
+        .login-footer {
+            color: #b8b9c3;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 1rem !important;
+            }
+            
+            .row {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .col-6 {
+                padding: 0 5px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .text-muted {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 
-<body class="c-app flex-row align-items-center">
+<body class="c-app">
 <div class="container">
-    <div class="row mb-3">
+    <div class="row">
         <div class="col-12 d-flex justify-content-center">
-            <img width="200" src="{{ asset('images/logo-dark.png') }}" alt="Logo">
+            <div class="brand-text">Gudangku</div>
         </div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-5">
+        <div class="col-md-5 col-sm-12">
             @if(Session::has('account_deactivated'))
                 <div class="alert alert-danger" role="alert">
                     {{ Session::get('account_deactivated') }}
                 </div>
             @endif
-            <div class="card p-4 border-0 shadow-sm">
+            <div class="card p-4 border-0">
                 <div class="card-body">
                     <form id="login" method="post" action="{{ url('/login') }}">
                         @csrf
-                        <h1>Login</h1>
-                        <p class="text-muted">Sign In to your account</p>
-                        <div class="input-group mb-3">
+                        <h1 class="mb-3">Login</h1>
+                        <p class="text-muted mb-4">Sign In to your account</p>
+                        <div class="input-group mb-4">
                             <div class="input-group-prepend">
                                     <span class="input-group-text">
                                       <i class="bi bi-person"></i>
@@ -62,18 +185,18 @@
                             @enderror
                         </div>
                         <div class="row">
-                            <div class="col-4">
-                                <button id="submit" class="btn btn-primary px-4 d-flex align-items-center"
+                            <div class="col-6">
+                                <button id="submit" class="btn btn-primary"
                                         type="submit">
                                     Login
-                                    <div id="spinner" class="spinner-border text-info" role="status"
+                                    <div id="spinner" class="spinner-border text-light" role="status"
                                          style="height: 20px;width: 20px;margin-left: 5px;display: none;">
                                         <span class="sr-only">Loading...</span>
                                     </div>
                                 </button>
                             </div>
-                            <div class="col-8 text-right">
-                                <a class="btn btn-link px-0" href="{{ route('password.request') }}">
+                            <div class="col-6 text-right">
+                                <a class="btn btn-link" href="{{ route('password.request') }}">
                                     Forgot password?
                                 </a>
                             </div>
@@ -82,9 +205,7 @@
                 </div>
             </div>
 
-            <p class="text-center mt-5 lead">
-                Developed By
-                <a href="https://fahimanzam.netlify.app" class="font-weight-bold text-primary">Fahim Anzam Dip</a>
+            <p class="text-center mt-5 login-footer">
             </p>
         </div>
     </div>

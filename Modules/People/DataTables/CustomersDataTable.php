@@ -36,28 +36,32 @@ class CustomersDataTable extends DataTable
             ->orderBy(4)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> ' . __('customer.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text('<i class="bi bi-printer-fill"></i> ' . __('customer.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text('<i class="bi bi-x-circle"></i> ' . __('customer.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text('<i class="bi bi-arrow-repeat"></i> ' . __('customer.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('customer_name')
+                ->title(__('customer.customer_name'))
                 ->className('text-center align-middle'),
 
             Column::make('customer_email')
+                ->title(__('customer.customer_email'))
                 ->className('text-center align-middle'),
 
             Column::make('customer_phone')
+                ->title(__('customer.customer_phone'))
                 ->className('text-center align-middle'),
 
             Column::computed('action')
+                ->title(__('customer.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->className('text-center align-middle'),

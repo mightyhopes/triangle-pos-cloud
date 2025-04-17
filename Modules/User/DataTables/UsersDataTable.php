@@ -25,9 +25,9 @@ class UsersDataTable extends DataTable
             })
             ->addColumn('status', function ($data) {
                 if ($data->is_active == 1) {
-                    $html = '<span class="badge badge-success">Active</span>';
+                    $html = '<span class="badge badge-success">' . __('user.yes') . '</span>';
                 } else {
-                    $html = '<span class="badge badge-warning">Deactivated</span>';
+                    $html = '<span class="badge badge-warning">' . __('user.no') . '</span>';
                 }
 
                 return $html;
@@ -59,13 +59,13 @@ class UsersDataTable extends DataTable
             ->orderBy(6)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> ' . __('user.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text('<i class="bi bi-printer-fill"></i> ' . __('user.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text('<i class="bi bi-x-circle"></i> ' . __('user.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text('<i class="bi bi-arrow-repeat"></i> ' . __('user.reload'))
             );
     }
 
@@ -75,18 +75,23 @@ class UsersDataTable extends DataTable
                 ->className('text-center align-middle'),
 
             Column::make('name')
+                ->title(__('user.name'))
                 ->className('text-center align-middle'),
 
             Column::make('email')
+                ->title(__('user.email'))
                 ->className('text-center align-middle'),
 
             Column::computed('role')
+                ->title(__('user.role'))
                 ->className('text-center align-middle'),
 
             Column::computed('status')
+                ->title(__('user.status'))
                 ->className('text-center align-middle'),
 
             Column::computed('action')
+                ->title(__('user.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->className('text-center align-middle'),

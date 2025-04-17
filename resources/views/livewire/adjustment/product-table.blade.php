@@ -19,12 +19,12 @@
             <thead>
             <tr class="align-middle">
                 <th class="align-middle">#</th>
-                <th class="align-middle">Product Name</th>
-                <th class="align-middle">Code</th>
-                <th class="align-middle">Stock</th>
-                <th class="align-middle">Quantity</th>
-                <th class="align-middle">Type</th>
-                <th class="align-middle">Action</th>
+                <th class="align-middle">{{ __('adjustment.product_name') }}</th>
+                <th class="align-middle">{{ __('adjustment.code') }}</th>
+                <th class="align-middle">{{ __('adjustment.stock') }}</th>
+                <th class="align-middle">{{ __('adjustment.quantity') }}</th>
+                <th class="align-middle">{{ __('adjustment.type') }}</th>
+                <th class="align-middle">{{ __('adjustment.action') }}</th>
             </tr>
             </thead>
             <tbody>
@@ -47,19 +47,19 @@
                             @if(isset($product['type']))
                                 @if($product['type'] == 'add')
                                     <select name="types[]" class="form-control">
-                                        <option value="add" selected>(+) Addition</option>
-                                        <option value="sub">(-) Subtraction</option>
+                                        <option value="add" selected>{{ __('adjustment.addition') }}</option>
+                                        <option value="sub">{{ __('adjustment.subtraction') }}</option>
                                     </select>
                                 @elseif($product['type'] == 'sub')
                                     <select name="types[]" class="form-control">
-                                        <option value="sub" selected>(-) Subtraction</option>
-                                        <option value="add">(+) Addition</option>
+                                        <option value="sub" selected>{{ __('adjustment.subtraction') }}</option>
+                                        <option value="add">{{ __('adjustment.addition') }}</option>
                                     </select>
                                 @endif
                             @else
                                 <select name="types[]" class="form-control">
-                                    <option value="add">(+) Addition</option>
-                                    <option value="sub">(-) Subtraction</option>
+                                    <option value="add">{{ __('adjustment.addition') }}</option>
+                                    <option value="sub">{{ __('adjustment.subtraction') }}</option>
                                 </select>
                             @endif
                         </td>
@@ -74,7 +74,7 @@
                 <tr>
                     <td colspan="7" class="text-center">
                         <span class="text-danger">
-                            Please search & select products!
+                            {{ __('adjustment.please_search') }}
                         </span>
                     </td>
                 </tr>

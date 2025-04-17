@@ -16,6 +16,17 @@ use Modules\SalesReturn\Entities\SaleReturnPayment;
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        
+        // Set locale for date formatting
+        $locale = session('locale', 'id');
+        if ($locale) {
+            app()->setLocale($locale);
+            setlocale(LC_TIME, $locale == 'id' ? 'id_ID.utf8' : 'en_US.utf8');
+        }
+    }
 
     public function index() {
         $sales = Sale::completed()->sum('total_amount');
@@ -135,9 +146,24 @@ class HomeController extends Controller
         $sent_payments = [];
         $months = [];
 
+        // Format nama bulan sesuai dengan locale yang digunakan
+        $locale = app()->getLocale();
         foreach ($dates_received as $key => $value) {
             $received_payments[] = $value;
-            $months[] = $key;
+            
+            // Parse dan format ulang bulan
+            list($month, $year) = explode('-', $key);
+            $dateObj = Carbon::createFromDate($year, $month, 1);
+            
+            if ($locale == 'id') {
+                // Format bulan dalam bahasa Indonesia (Contoh: "Jan 2023")
+                $formattedMonth = $dateObj->translatedFormat('M Y');
+            } else {
+                // Format bulan dalam bahasa Inggris (Contoh: "Jan, 2023")
+                $formattedMonth = $dateObj->translatedFormat('M, Y');
+            }
+            
+            $months[] = $formattedMonth;
         }
 
         foreach ($dates_sent as $key => $value) {
@@ -174,9 +200,24 @@ class HomeController extends Controller
 
         $data = [];
         $days = [];
+        $locale = app()->getLocale();
+        
         foreach ($dates as $key => $value) {
             $data[] = $value / 100;
-            $days[] = $key;
+            
+            // Format tanggal sesuai locale
+            list($day, $month, $year) = explode('-', $key);
+            $dateObj = Carbon::createFromFormat('d-m-y', $key);
+            
+            if ($locale == 'id') {
+                // Format tanggal dalam bahasa Indonesia
+                $formattedDate = $dateObj->translatedFormat('d M');
+            } else {
+                // Format tanggal dalam bahasa Inggris
+                $formattedDate = $dateObj->translatedFormat('d M');
+            }
+            
+            $days[] = $formattedDate;
         }
 
         return response()->json(['data' => $data, 'days' => $days]);
@@ -206,12 +247,26 @@ class HomeController extends Controller
 
         $data = [];
         $days = [];
+        $locale = app()->getLocale();
+        
         foreach ($dates as $key => $value) {
             $data[] = $value / 100;
-            $days[] = $key;
+            
+            // Format tanggal sesuai locale
+            list($day, $month, $year) = explode('-', $key);
+            $dateObj = Carbon::createFromFormat('d-m-y', $key);
+            
+            if ($locale == 'id') {
+                // Format tanggal dalam bahasa Indonesia
+                $formattedDate = $dateObj->translatedFormat('d M');
+            } else {
+                // Format tanggal dalam bahasa Inggris
+                $formattedDate = $dateObj->translatedFormat('d M');
+            }
+            
+            $days[] = $formattedDate;
         }
 
         return response()->json(['data' => $data, 'days' => $days]);
-
     }
 }

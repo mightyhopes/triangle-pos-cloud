@@ -1,12 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LanguageController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 */
+
+// Route untuk mengubah bahasa
+Route::get('lang/{locale}', [LanguageController::class, 'switchLang'])->name('lang.switch');
 
 Route::get('/', function () {
     return view('auth.login');

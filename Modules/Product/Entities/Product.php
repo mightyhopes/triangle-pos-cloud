@@ -24,7 +24,7 @@ class Product extends Model implements HasMedia
 
     public function registerMediaCollections(): void {
         $this->addMediaCollection('images')
-            ->useFallbackUrl('/images/fallback_product_image.png');
+            ->useFallbackUrl('/storage/products/default.png');
     }
 
     public function registerMediaConversions(Media $media = null): void {

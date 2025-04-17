@@ -20,8 +20,12 @@ class ProductDataTable extends DataTable
                 return view('product::products.partials.actions', compact('data'));
             })
             ->addColumn('product_image', function ($data) {
-                $url = $data->getFirstMediaUrl('images', 'thumb');
-                return '<img src="'.$url.'" border="0" width="50" class="img-thumbnail" align="center"/>';
+                $media = $data->getFirstMedia('images');
+                if ($media) {
+                    $url = '/storage/' . $media->id . '/' . $media->file_name;
+                    return '<img src="'.$url.'" border="0" width="50" class="img-thumbnail" align="center"/>';
+                }
+                return '<img src="/images/fallback_product_image.png" border="0" width="50" class="img-thumbnail" align="center"/>';
             })
             ->addColumn('product_price', function ($data) {
                 return format_currency($data->product_price);
@@ -32,7 +36,7 @@ class ProductDataTable extends DataTable
             ->addColumn('product_quantity', function ($data) {
                 return $data->product_quantity . ' ' . $data->product_unit;
             })
-            ->rawColumns(['product_image']);
+            ->rawColumns(['product_image', 'action']);
     }
 
     public function query(Product $model)
@@ -52,13 +56,13 @@ class ProductDataTable extends DataTable
                     ->orderBy(7)
                     ->buttons(
                         Button::make('excel')
-                            ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                            ->text('<i class="bi bi-file-earmark-excel-fill"></i> ' . __('products.excel')),
                         Button::make('print')
-                            ->text('<i class="bi bi-printer-fill"></i> Print'),
+                            ->text('<i class="bi bi-printer-fill"></i> ' . __('products.print')),
                         Button::make('reset')
-                            ->text('<i class="bi bi-x-circle"></i> Reset'),
+                            ->text('<i class="bi bi-x-circle"></i> ' . __('products.reset')),
                         Button::make('reload')
-                            ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                            ->text('<i class="bi bi-arrow-repeat"></i> ' . __('products.reload'))
                     );
     }
 
@@ -66,31 +70,31 @@ class ProductDataTable extends DataTable
     {
         return [
             Column::computed('product_image')
-                ->title('Image')
+                ->title(__('products.image'))
                 ->className('text-center align-middle'),
 
             Column::make('category.category_name')
-                ->title('Category')
+                ->title(__('products.category'))
                 ->className('text-center align-middle'),
 
             Column::make('product_code')
-                ->title('Code')
+                ->title(__('products.code'))
                 ->className('text-center align-middle'),
 
             Column::make('product_name')
-                ->title('Name')
+                ->title(__('products.name'))
                 ->className('text-center align-middle'),
 
             Column::computed('product_cost')
-                ->title('Cost')
+                ->title(__('products.cost'))
                 ->className('text-center align-middle'),
 
             Column::computed('product_price')
-                ->title('Price')
+                ->title(__('products.price'))
                 ->className('text-center align-middle'),
 
             Column::computed('product_quantity')
-                ->title('Quantity')
+                ->title(__('products.quantity'))
                 ->className('text-center align-middle'),
 
             Column::computed('action')

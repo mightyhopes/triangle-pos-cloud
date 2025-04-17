@@ -43,32 +43,36 @@ class RolesDataTable extends DataTable
             ->orderBy(4)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> ' . __('role.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text('<i class="bi bi-printer-fill"></i> ' . __('role.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text('<i class="bi bi-x-circle"></i> ' . __('role.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text('<i class="bi bi-arrow-repeat"></i> ' . __('role.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('id')
+                ->title('#')
                 ->addClass('text-center')
                 ->addClass('align-middle'),
 
             Column::make('name')
+                ->title(__('role.name'))
                 ->addClass('text-center')
                 ->addClass('align-middle'),
 
             Column::computed('permissions')
+                ->title(__('role.permissions'))
                 ->addClass('text-center')
                 ->addClass('align-middle')
                 ->width('700px'),
 
             Column::computed('action')
+                ->title(__('role.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->addClass('text-center')

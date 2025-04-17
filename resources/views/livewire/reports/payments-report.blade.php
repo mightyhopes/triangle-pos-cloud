@@ -5,51 +5,49 @@
                 <div class="card-body">
                     <form wire:submit="generateReport">
                         <div class="form-row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label>Start Date <span class="text-danger">*</span></label>
+                                    <label>{{ __('report.start_date') }} <span class="text-danger">*</span></label>
                                     <input wire:model="start_date" type="date" class="form-control" name="start_date">
                                     @error('start_date')
                                     <span class="text-danger mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label>End Date <span class="text-danger">*</span></label>
+                                    <label>{{ __('report.end_date') }} <span class="text-danger">*</span></label>
                                     <input wire:model="end_date" type="date" class="form-control" name="end_date">
                                     @error('end_date')
                                     <span class="text-danger mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>{{ __('report.payment_type') }}</label>
+                                    <select wire:model.live="payment_type" class="form-control" name="payment_type">
+                                        <option value="">{{ __('report.all_payment_types') }}</option>
+                                        <option value="sale">{{ __('report.sales') }}</option>
+                                        <option value="sale_return">{{ __('report.sale_returns') }}</option>
+                                        <option value="purchase">{{ __('report.purchases') }}</option>
+                                        <option value="purchase_return">{{ __('report.purchase_returns') }}</option>
+                                        <option value="expense">{{ __('expense.expenses') }}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label>Payments</label>
-                                    <select wire:model.live="payments" class="form-control" name="payments">
-                                        <option value="">Select Payments</option>
-                                        <option value="sale">Sales</option>
-                                        <option value="sale_return">Sale Returns</option>
-                                        <option value="purchase">Purchase</option>
-                                        <option value="purchase_return">Purchase Returns</option>
-                                    </select>
-                                    @error('payments')
-                                    <span class="text-danger mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label>Payment Method</label>
+                                    <label>{{ __('report.payment_method') }}</label>
                                     <select wire:model="payment_method" class="form-control" name="payment_method">
-                                        <option value="">Select Payment Method</option>
-                                        <option value="Cash">Cash</option>
-                                        <option value="Credit Card">Credit Card</option>
-                                        <option value="Bank Transfer">Bank Transfer</option>
-                                        <option value="Cheque">Cheque</option>
-                                        <option value="Other">Other</option>
+                                        <option value="">{{ __('report.all_payment_methods') }}</option>
+                                        <option value="Cash">{{ __('Cash') }}</option>
+                                        <option value="Credit Card">{{ __('Credit Card') }}</option>
+                                        <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
+                                        <option value="Cheque">{{ __('Cheque') }}</option>
+                                        <option value="Other">{{ __('Other') }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -58,81 +56,84 @@
                             <button type="submit" class="btn btn-primary">
                                 <span wire:target="generateReport" wire:loading class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 <i wire:target="generateReport" wire:loading.remove class="bi bi-shuffle"></i>
-                                Filter Report
+                                {{ __('report.filter') }}
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
 
-    @if($information->isNotEmpty())
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <table class="table table-bordered table-striped text-center mb-0">
-                            <div wire:loading.flex class="col-12 position-absolute justify-content-center align-items-center" style="top:0;right:0;left:0;bottom:0;background-color: rgba(255,255,255,0.5);z-index: 99;">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="sr-only">Loading...</span>
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div>
+                        <h6 class="text-center mb-4">{{ __('report.payments_report') }}</h6>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr class="text-center">
+                                    <th class="align-middle">{{ __('report.date') }}</th>
+                                    <th class="align-middle">{{ __('report.reference') }}</th>
+                                    <th class="align-middle">{{ __('report.payment_type') }}</th>
+                                    <th class="align-middle">{{ __('report.payment_method') }}</th>
+                                    <th class="align-middle">{{ __('report.amount') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @if(is_object($payment_results) && count($payment_results) > 0)
+                                    @foreach($payment_results as $payment)
+                                        <tr class="text-center">
+                                            <td class="align-middle">{{ \Carbon\Carbon::parse($payment->date)->format('d M, Y') }}</td>
+                                            <td class="align-middle">{{ $payment->reference }}</td>
+                                            <td class="align-middle">
+                                                @if($payment->payment_type == 'sale')
+                                                    <span class="badge badge-success">{{ __('report.sales') }}</span>
+                                                @elseif($payment->payment_type == 'sale_return')
+                                                    <span class="badge badge-danger">{{ __('report.sale_returns') }}</span>
+                                                @elseif($payment->payment_type == 'purchase')
+                                                    <span class="badge badge-info">{{ __('report.purchases') }}</span>
+                                                @elseif($payment->payment_type == 'purchase_return')
+                                                    <span class="badge badge-warning">{{ __('report.purchase_returns') }}</span>
+                                                @elseif($payment->payment_type == 'expense')
+                                                    <span class="badge badge-dark">{{ __('expense.expenses') }}</span>
+                                                @endif
+                                            </td>
+                                            <td class="align-middle">{{ $payment->payment_method }}</td>
+                                            <td class="align-middle">
+                                                @if($payment->amount < 0)
+                                                    <span class="text-danger">
+                                                        {{ format_currency($payment->amount) }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-success">
+                                                        {{ format_currency($payment->amount) }}
+                                                    </span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            <span class="text-secondary">
+                                                {{ __('report.no_data_available') }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endif
+                                </tbody>
+                            </table>
+                            
+                            @if(is_object($payment_results) && method_exists($payment_results, 'links'))
+                                <div class="mt-3">
+                                    {{ $payment_results->links() }}
                                 </div>
-                            </div>
-                            <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Reference</th>
-                                <th>{{ ucwords(str_replace('_', ' ', $payments)) }}</th>
-                                <th>Total</th>
-                                <th>Payment Method</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @forelse($information as $data)
-                                <tr>
-                                    <td>{{ \Carbon\Carbon::parse($data->date)->format('d M, Y') }}</td>
-                                    <td>{{ $data->reference }}</td>
-                                    <td>
-                                        @if($payments == 'sale')
-                                            {{ $data->sale->reference }}
-                                        @elseif($payments == 'purchase')
-                                            {{ $data->purchase->reference }}
-                                        @elseif($payments == 'sale_return')
-                                            {{ $data->saleReturn->reference }}
-                                        @elseif($payments == 'purchase_return')
-                                            {{ $data->purchaseReturn->reference }}
-                                        @endif
-                                    </td>
-                                    <td>{{ format_currency($data->amount) }}</td>
-                                    <td>{{ $data->payment_method }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8">
-                                        <span class="text-danger">No Data Available!</span>
-                                    </td>
-                                </tr>
-                            @endforelse
-                            </tbody>
-                        </table>
-                        <div @class(['mt-3' => $information->hasPages()])>
-                            {{ $information->links() }}
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    @else
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <div class="alert alert-warning mb-0">
-                            No Data Available!
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
+    </div>
 </div>

@@ -20,28 +20,31 @@ class PaymentsReport extends Component
 
     public $start_date;
     public $end_date;
-    public $payments;
+    public $payment_type;
     public $payment_method;
+    public $payment_results;
 
     protected $rules = [
         'start_date' => 'required|date|before:end_date',
-        'end_date'   => 'required|date|after:start_date',
-        'payments'   => 'required|string'
+        'end_date'   => 'required|date|after:start_date'
     ];
+    
     protected $query;
 
     public function mount() {
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
-        $this->payments = '';
+        $this->payment_type = '';
+        $this->payment_method = '';
         $this->query = null;
+        $this->payment_results = collect();
     }
 
     public function render() {
         $this->getQuery();
 
-        return view('livewire.reports.payments-report', [
-            'information' => $this->query ? $this->query->orderBy('date', 'desc')
+        if ($this->query) {
+            $this->payment_results = $this->query->orderBy('date', 'desc')
                 ->when($this->start_date, function ($query) {
                     return $query->whereDate('date', '>=', $this->start_date);
                 })
@@ -51,30 +54,33 @@ class PaymentsReport extends Component
                 ->when($this->payment_method, function ($query) {
                     return $query->where('payment_method', $this->payment_method);
                 })
-                ->paginate(10) : collect()
-        ]);
+                ->paginate(10);
+        }
+
+        return view('livewire.reports.payments-report');
     }
 
     public function generateReport() {
         $this->validate();
-        $this->render();
+        $this->resetPage();
     }
 
-    public function updatedPayments($value) {
+    public function updatedPaymentType($value) {
         $this->resetPage();
     }
 
     public function getQuery() {
-        if ($this->payments == 'sale') {
+        if ($this->payment_type == 'sale') {
             $this->query = SalePayment::query()->with('sale');
-        } elseif ($this->payments == 'sale_return') {
+        } elseif ($this->payment_type == 'sale_return') {
             $this->query = SaleReturnPayment::query()->with('saleReturn');
-        } elseif ($this->payments == 'purchase') {
+        } elseif ($this->payment_type == 'purchase') {
             $this->query = PurchasePayment::query()->with('purchase');
-        } elseif ($this->payments == 'purchase_return') {
+        } elseif ($this->payment_type == 'purchase_return') {
             $this->query = PurchaseReturnPayment::query()->with('purchaseReturn');
         } else {
             $this->query = null;
+            $this->payment_results = collect();
         }
     }
 }

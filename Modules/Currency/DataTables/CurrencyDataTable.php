@@ -35,34 +35,40 @@ class CurrencyDataTable extends DataTable
             ->orderBy(6)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> ' . __('currency.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text('<i class="bi bi-printer-fill"></i> ' . __('currency.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text('<i class="bi bi-x-circle"></i> ' . __('currency.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text('<i class="bi bi-arrow-repeat"></i> ' . __('currency.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('currency_name')
+                ->title(__('currency.name'))
                 ->className('text-center align-middle'),
 
             Column::make('code')
+                ->title(__('currency.code'))
                 ->className('text-center align-middle'),
 
             Column::make('symbol')
+                ->title(__('currency.symbol'))
                 ->className('text-center align-middle'),
 
             Column::make('thousand_separator')
+                ->title(__('currency.thousand_separator'))
                 ->className('text-center align-middle'),
 
             Column::make('decimal_separator')
+                ->title(__('currency.decimal_separator'))
                 ->className('text-center align-middle'),
 
             Column::computed('action')
+                ->title(__('currency.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->className('text-center align-middle'),

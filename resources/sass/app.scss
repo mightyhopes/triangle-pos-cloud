@@ -1,54 +1,138 @@
 // CoreUI
 @import '@coreui/coreui/scss/coreui';
 
-//Extra Overrides
-//.c-sidebar {
-//    background: #0f766e;
-//    color: #fff;
-//}
-//
+// Dark Theme Overrides
+$dark-bg: #1e1e2d;
+$dark-card: #27293d;
+$dark-secondary: #1a1a27;
+$dark-border: #2d2d43;
+$dark-text: #e0e0e0;
+$accent-color: #3699ff;
+
+// Apply Dark Theme
+body {
+    background-color: $dark-bg;
+    color: $dark-text;
+}
+
+.c-app {
+    background-color: $dark-bg;
+    color: $dark-text;
+}
+
+.c-sidebar {
+    background: #181824;
+    color: $dark-text;
+}
+
+.c-header {
+    background: $dark-card !important;
+    color: $dark-text;
+    border-bottom: 1px solid $dark-border;
+}
+
+.c-footer {
+    background: $dark-card !important;
+    color: $dark-text;
+    border-top: 1px solid $dark-border;
+}
+
+.card {
+    background-color: $dark-card;
+    border: 1px solid $dark-border;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.table {
+    color: $dark-text;
+}
+
+.table-bordered {
+    border: 1px solid $dark-border;
+}
+
+.table td, .table th {
+    border-top: 1px solid $dark-border;
+}
+
+.form-control, .btn-outline-secondary {
+    background-color: $dark-secondary;
+    border-color: $dark-border;
+    color: $dark-text;
+}
+
+.form-control:focus {
+    background-color: darken($dark-secondary, 3%);
+    border-color: $accent-color;
+    color: $dark-text;
+}
+
 .c-sidebar .c-sidebar-nav-link.c-active, .c-sidebar .c-active.c-sidebar-nav-dropdown-toggle {
     color: #fff;
-    background: $primary;
+    background: $accent-color;
 }
-//
-//
-//.c-sidebar .c-sidebar-nav-link:hover {
-//    color: #fff;
-//    background: #0d9488;
-//}
+
+.c-sidebar .c-sidebar-nav-link:hover, .c-sidebar .c-sidebar-nav-dropdown-toggle:hover {
+    color: #fff;
+    background: rgba($accent-color, 0.7);
+}
 
 .btn:not([class*=ghost]):not([class*=link]):not([class*=outline]):not([class*=transparent]) {
     border: 0;
-    box-shadow: 0 1px 1px 0 rgb(60 75 100 / 14%), 0 2px 1px -1px rgb(60 75 100 / 12%), 0 1px 3px 0 rgb(60 75 100 / 20%);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.25), 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary {
+    background-color: $accent-color;
+    border-color: darken($accent-color, 5%);
+}
+
+.btn-primary:hover {
+    background-color: darken($accent-color, 10%);
+    border-color: darken($accent-color, 15%);
 }
 
 .dropzone {
-    border: 2px dashed #3B82F6;
+    border: 2px dashed $accent-color;
     border-radius: 5px;
-    background: #DBEAFE;
+    background: darken($dark-secondary, 3%);
 }
+
 .dz-preview {
-    background: #EFF6FF !important;
+    background: $dark-secondary !important;
     border-radius: 20px;
 }
+
 .dz-remove {
-    color: #333;
+    color: $dark-text;
 }
+
 .dropzone i.bi.bi-cloud-arrow-up {
     font-size: 5rem;
-    color: #60A5FA;
+    color: $accent-color;
 }
+
 .dropzone .dz-message {
-    color: rgba(0,0,0,.54);
+    color: rgba(255, 255, 255, 0.7);
     font-weight: 500;
     font-size: initial;
 }
-.dropzone .dz-preview .dz-image img {
-    display: block;
-    width: 100%;
+
+.dropdown-menu {
+    background-color: $dark-card;
+    border: 1px solid $dark-border;
 }
 
+.dropdown-item {
+    color: $dark-text;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    color: #fff;
+    background-color: rgba($accent-color, 0.7);
+}
+
+// Make tables responsive
 table {
     width: 990px !important;
 }
@@ -58,4 +142,29 @@ table {
     table {
         width: 100% !important;
     }
+}
+
+// DataTables specific styling
+.dataTables_wrapper .dataTables_length, 
+.dataTables_wrapper .dataTables_filter, 
+.dataTables_wrapper .dataTables_info, 
+.dataTables_wrapper .dataTables_processing, 
+.dataTables_wrapper .dataTables_paginate {
+    color: $dark-text;
+}
+
+.page-item.disabled .page-link {
+    background-color: $dark-secondary;
+    border-color: $dark-border;
+}
+
+.page-link {
+    background-color: $dark-secondary;
+    border-color: $dark-border;
+    color: $dark-text;
+}
+
+.page-item.active .page-link {
+    background-color: $accent-color;
+    border-color: $accent-color;
 }

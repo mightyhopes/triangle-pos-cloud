@@ -1,0 +1,617 @@
+/* Responsive Tables */
+.table-responsive {
+    margin: 15px;
+    padding: 0;
+    border-radius: 8px;
+    background: #fff;
+    overflow-x: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    width: calc(100% - 30px);
+}
+
+.table {
+    margin-bottom: 0;
+    width: 100%;
+    color: #333;
+    background: #fff;
+    border-collapse: collapse;
+}
+
+.table thead th {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    color: #333;
+    font-weight: 600;
+    padding: 12px;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 12px;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+    color: #333;
+}
+
+.table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* Card wrapper for tables */
+.card {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    margin: 15px;
+    overflow: hidden;
+}
+
+.card-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+.card-body {
+    padding: 15px;
+    overflow-x: auto;
+}
+
+/* DataTables specific styles */
+.dataTables_wrapper {
+    padding: 15px;
+}
+
+.dataTables_wrapper .dataTables_length {
+    margin-bottom: 15px;
+}
+
+.dataTables_wrapper .dataTables_length label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    color: #333;
+    padding: 6px 30px 6px 10px;
+    border-radius: 4px;
+    min-width: 120px !important;
+    width: auto;
+    height: 35px;
+    margin: 0 5px;
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+    appearance: menulist;
+    text-align: left;
+    text-indent: 0;
+    text-overflow: '';
+    position: relative;
+    box-sizing: border-box;
+}
+
+.dataTables_wrapper .dataTables_length select::-ms-expand {
+    display: none;
+}
+
+.dataTables_wrapper .dataTables_length select option {
+    padding: 6px 10px;
+}
+
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 15px;
+}
+
+.dataTables_wrapper .dataTables_filter label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    color: #333;
+    padding: 6px 12px;
+    border-radius: 4px;
+    height: 35px;
+    width: 200px;
+}
+
+.dataTables_wrapper .dataTables_info {
+    color: #666;
+    padding: 15px 0;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    padding: 15px 0;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    background: #fff !important;
+    border: 1px solid #dee2e6 !important;
+    color: #333 !important;
+    margin: 0 2px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #007bff !important;
+    border-color: #007bff !important;
+    color: white !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #007bff !important;
+    border-color: #007bff !important;
+    color: white !important;
+}
+
+/* Mobile responsive styles */
+@media screen and (max-width: 768px) {
+    .table-responsive {
+        margin: 5px;
+        width: calc(100% - 10px);
+        overflow-x: visible;
+    }
+
+    .card {
+        margin: 5px;
+        border: none;
+    }
+
+    .card-header {
+        padding: 12px;
+    }
+
+    .card-body {
+        padding: 10px;
+    }
+
+    .dataTables_wrapper {
+        padding: 10px;
+    }
+
+    /* Stack table on mobile */
+    .table {
+        width: 100%;
+    }
+
+    .table tbody tr {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        background: #fff;
+    }
+
+    .table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        min-height: 40px;
+        font-size: 14px;
+    }
+
+    .table tbody td:last-child {
+        border-bottom: none;
+    }
+
+    .table tbody td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        margin-right: 10px;
+        color: #666;
+    }
+
+    /* Action buttons in mobile */
+    .table td.actions {
+        justify-content: flex-start;
+    }
+
+    .table td.actions .btn-group {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+    .table td.actions .btn {
+        padding: 8px 12px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Hide table headers on mobile */
+    .table thead {
+        display: none;
+    }
+
+    /* DataTables controls for mobile */
+    .dataTables_wrapper .dataTables_length {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .dataTables_wrapper .dataTables_length label {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        width: auto;
+        min-width: 80px;
+    }
+
+    /* Pagination for mobile */
+    .dataTables_wrapper .dataTables_paginate {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 8px 12px;
+        margin: 2px;
+    }
+}
+
+/* Form styles */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background: #fff;
+    color: #333;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Button styles */
+.btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #007bff;
+    border: 1px solid #0056b3;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-info {
+    background: #17a2b8;
+    border: 1px solid #138496;
+    color: #fff;
+}
+
+.btn-info:hover {
+    background: #138496;
+}
+
+.btn-danger {
+    background: #dc3545;
+    border: 1px solid #c82333;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+/* Additional spacing fixes */
+.row {
+    margin: 0 -15px;
+}
+
+.col, [class*="col-"] {
+    padding: 0 15px;
+}
+
+/* Print styles */
+@media print {
+    .table-responsive {
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .table thead th {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .table tbody td {
+        border-color: #000 !important;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}
+
+/* Desktop Styles */
+.is-desktop .table-responsive {
+    margin: 15px;
+    padding: 0;
+    border-radius: 8px;
+    background: #fff;
+    overflow-x: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    width: calc(100% - 30px);
+}
+
+/* Base Table Styles */
+.table {
+    width: 100%;
+    margin-bottom: 0;
+    color: #333;
+    background: #fff;
+    border-collapse: collapse;
+}
+
+.table thead th {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    color: #333;
+    font-weight: 600;
+    padding: 15px;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+    color: #333;
+}
+
+/* Mobile Styles */
+.is-mobile .table-responsive {
+    margin: 5px;
+    padding: 0;
+    width: calc(100% - 10px);
+    font-size: 14px;
+    overflow-x: hidden;
+}
+
+.is-mobile .card {
+    margin: 5px;
+    border: none;
+    box-shadow: none;
+}
+
+.is-mobile .card-body {
+    padding: 5px;
+}
+
+.is-mobile .table {
+    display: block;
+    width: 100%;
+}
+
+.is-mobile .table thead {
+    display: none;
+}
+
+.is-mobile .table tbody {
+    display: block;
+    width: 100%;
+}
+
+.is-mobile .table tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.is-mobile .table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    min-height: 40px;
+}
+
+.is-mobile .table tbody td:before {
+    content: attr(data-label);
+    font-weight: 600;
+    margin-right: 10px;
+    min-width: 100px;
+    color: #666;
+}
+
+/* Mobile Form Controls */
+.is-mobile .dataTables_wrapper {
+    padding: 5px;
+}
+
+.is-mobile .dataTables_length,
+.is-mobile .dataTables_filter {
+    float: none !important;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.is-mobile .dataTables_filter input {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 8px !important;
+}
+
+.is-mobile .dataTables_length select {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 8px !important;
+}
+
+/* Mobile Buttons */
+.is-mobile .btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    margin: 2px;
+}
+
+.is-mobile .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.is-mobile .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: flex-end;
+}
+
+/* Mobile Pagination */
+.is-mobile .dataTables_paginate {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.is-mobile .dataTables_paginate .paginate_button {
+    padding: 6px 10px !important;
+    margin: 2px !important;
+    font-size: 13px;
+}
+
+/* Form Inputs Mobile */
+.is-mobile .form-control {
+    font-size: 14px;
+    padding: 8px;
+    height: auto;
+}
+
+.is-mobile select.form-control {
+    padding-right: 25px;
+}
+
+/* Table Cell Content */
+.is-mobile .table td[data-label]:before {
+    content: attr(data-label);
+    float: left;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.is-mobile .table td.actions {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* Specific Column Widths for Mobile */
+.is-mobile .table td[data-label="Date"],
+.is-mobile .table td[data-label="Reference"],
+.is-mobile .table td[data-label="Customer"],
+.is-mobile .table td[data-label="Amount"] {
+    font-size: 13px;
+}
+
+.is-mobile .table td[data-label="Actions"] {
+    border-bottom: none;
+}
+
+/* Card Styles */
+.card {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+/* Utility Classes */
+.text-right {
+    text-align: right !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+/* Print Styles */
+@media print {
+    .table-responsive {
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .table thead th {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .table tbody td {
+        border-color: #000 !important;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}
+
+/* Custom Scrollbar for Better UX */
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #555;
+} 
