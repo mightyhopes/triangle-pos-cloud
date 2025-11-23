@@ -35,7 +35,7 @@ class SaleController extends Controller
 
 
     public function store(StoreSaleRequest $request) {
-        DB::transaction(function () use ($request) {
+        $sale = DB::transaction(function () use ($request) {
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount == $request->total_amount) {
@@ -98,7 +98,14 @@ class SaleController extends Controller
                     'payment_method' => $request->payment_method
                 ]);
             }
+            return $sale;
         });
+
+        try {
+            (new \Modules\Firebase\Services\FirebaseService)->syncSale($sale);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Firebase Sync Failed: ' . $e->getMessage());
+        }
 
         toast('Sale Created!', 'success');
 
@@ -213,7 +220,14 @@ class SaleController extends Controller
             }
 
             Cart::instance('sale')->destroy();
+            return $sale;
         });
+
+        try {
+            (new \Modules\Firebase\Services\FirebaseService)->syncSale($sale);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Firebase Sync Failed: ' . $e->getMessage());
+        }
 
         toast('Sale Updated!', 'info');
 

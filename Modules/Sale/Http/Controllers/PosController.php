@@ -29,7 +29,7 @@ class PosController extends Controller
 
 
     public function store(StorePosSaleRequest $request) {
-        DB::transaction(function () use ($request) {
+        $sale = DB::transaction(function () use ($request) {
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount == $request->total_amount) {
@@ -91,7 +91,14 @@ class PosController extends Controller
                     'payment_method' => $request->payment_method
                 ]);
             }
+            return $sale;
         });
+
+        try {
+            (new \Modules\Firebase\Services\FirebaseService)->syncSale($sale);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Firebase Sync Failed: ' . $e->getMessage());
+        }
 
         toast('POS Sale Created!', 'success');
 

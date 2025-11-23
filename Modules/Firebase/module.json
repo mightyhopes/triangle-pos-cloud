@@ -1,0 +1,13 @@
+{
+    "name": "Firebase",
+    "alias": "firebase",
+    "description": "Firebase Integration Module",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Firebase\\Providers\\FirebaseServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

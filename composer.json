@@ -10,6 +10,7 @@
         "barryvdh/laravel-snappy": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
+        "kreait/laravel-firebase": "*",
         "laravel/framework": "^10.0",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^4.0",

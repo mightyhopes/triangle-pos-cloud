@@ -1,0 +1,13 @@
+{
+    "name": "AI",
+    "alias": "ai",
+    "description": "AI Driven Suggestions Module",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\AI\\Providers\\AIServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
