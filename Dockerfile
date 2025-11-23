@@ -1,27 +1,50 @@
-FROM php:8.1
+FROM php:8.2-apache
 
-WORKDIR /app
-
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-  libzip-dev \
-  zip \
-  git 
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    libzip-dev \
+    libxrender1 \
+    libfontconfig1 \
+    libx11-dev \
+    libjpeg62-turbo \
+    libxtst6 \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Install php extensions
-RUN docker-php-ext-install mysqli pdo pdo_mysql
-
+# Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- \
-  --install-dir=/usr/bin --filename=composer
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
 
-COPY . /app
+# Configure Apache DocumentRoot to /public
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
-RUN composer install --ignore-platform-reqs
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Give execute permission to startup script
-RUN chmod +x /app/docker-startup.sh
+# Set working directory
+WORKDIR /var/www/html
 
-ENTRYPOINT [ "/app/docker-startup.sh" ]
+# Copy composer files first for caching
+COPY composer.json composer.lock ./
 
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
+# Copy application files
+COPY . .
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Expose port 80
+EXPOSE 80

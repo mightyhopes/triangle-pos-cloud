@@ -14,6 +14,12 @@ class FirebaseService
     {
         $credentialsPath = storage_path('firebase_credentials.json');
 
+        // CLOUD DEPLOYMENT FIX:
+        // If file doesn't exist, try to create it from Environment Variable
+        if (!file_exists($credentialsPath) && env('FIREBASE_CREDENTIALS_JSON')) {
+            file_put_contents($credentialsPath, env('FIREBASE_CREDENTIALS_JSON'));
+        }
+
         if (file_exists($credentialsPath)) {
             try {
                 $factory = (new Factory)

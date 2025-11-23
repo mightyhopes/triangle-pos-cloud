@@ -1,2 +1,9 @@
+/vendor
+/node_modules
+/storage/*.key
+/storage/firebase_credentials.json
+.env
 .git
-
+.gitignore
+Dockerfile
+.dockerignore
