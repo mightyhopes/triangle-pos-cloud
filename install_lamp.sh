@@ -15,10 +15,18 @@ echo -e "${GREEN}Starting Native LAMP Setup (Fixed)...${NC}"
 # 1. Install Dependencies (Apache, MySQL, PHP 8.2)
 echo "Installing LAMP Stack..."
 export DEBIAN_FRONTEND=noninteractive
+export LC_ALL=C.UTF-8
+
+# Clean apt cache to ensure fresh package lists
+rm -rf /var/lib/apt/lists/*
+
 apt-get update
-apt-get install -y software-properties-common
+apt-get install -y software-properties-common lsb-release ca-certificates apt-transport-https
+
+# Add PHP PPA
 add-apt-repository -y ppa:ondrej/php
 apt-get update
+
 # Added libapache2-mod-php8.2 and explicit php8.2
 apt-get install -y apache2 mysql-server unzip git curl
 apt-get install -y php8.2 php8.2-cli php8.2-common php8.2-mysql php8.2-zip php8.2-gd php8.2-mbstring php8.2-curl php8.2-xml php8.2-bcmath libapache2-mod-php8.2
