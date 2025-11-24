@@ -10,16 +10,24 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-echo -e "${GREEN}Starting Native LAMP Setup...${NC}"
+echo -e "${GREEN}Starting Native LAMP Setup (Fixed)...${NC}"
 
 # 1. Install Dependencies (Apache, MySQL, PHP 8.2)
 echo "Installing LAMP Stack..."
+export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y software-properties-common
 add-apt-repository -y ppa:ondrej/php
 apt-get update
+# Added libapache2-mod-php8.2 and explicit php8.2
 apt-get install -y apache2 mysql-server unzip git curl
-apt-get install -y php8.2 php8.2-cli php8.2-common php8.2-mysql php8.2-zip php8.2-gd php8.2-mbstring php8.2-curl php8.2-xml php8.2-bcmath
+apt-get install -y php8.2 php8.2-cli php8.2-common php8.2-mysql php8.2-zip php8.2-gd php8.2-mbstring php8.2-curl php8.2-xml php8.2-bcmath libapache2-mod-php8.2
+
+# Verify PHP installation
+if ! command -v php8.2 &> /dev/null; then
+    echo -e "${RED}PHP 8.2 failed to install. Exiting.${NC}"
+    exit 1
+fi
 
 # 2. Configure MySQL
 echo "Configuring Database..."
@@ -43,15 +51,18 @@ cd $APP_DIR
 git pull
 
 # Install Composer
-if ! command -v composer &> /dev/null; then
-    echo "Installing Composer..."
-    curl -sS https://getcomposer.org/installer | php
-    mv composer.phar /usr/local/bin/composer
+echo "Installing Composer..."
+if [ -f /usr/local/bin/composer ]; then
+    rm /usr/local/bin/composer
 fi
+curl -sS https://getcomposer.org/installer | php8.2
+mv composer.phar /usr/local/bin/composer
+chmod +x /usr/local/bin/composer
 
 # Install Dependencies
 echo "Installing PHP Dependencies..."
-composer install --no-dev --optimize-autoloader
+# Use php8.2 explicitly to run composer if needed, but composer is a script
+/usr/local/bin/composer install --no-dev --optimize-autoloader
 
 # 4. Configure Environment
 if [ ! -f .env ]; then
@@ -65,7 +76,7 @@ if [ ! -f .env ]; then
     VPS_IP=$(curl -s ifconfig.me)
     sed -i "s|APP_URL=http://localhost|APP_URL=http://$VPS_IP|" .env
     
-    php artisan key:generate
+    php8.2 artisan key:generate
 fi
 
 # 5. Permissions
@@ -74,6 +85,10 @@ chmod -R 775 $APP_DIR/storage $APP_DIR/bootstrap/cache
 
 # 6. Configure Apache
 echo "Configuring Apache..."
+# Enable PHP module explicitly
+a2enmod php8.2
+a2enmod rewrite
+
 cat > /etc/apache2/sites-available/triangle-pos.conf <<EOF
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
@@ -92,14 +107,13 @@ EOF
 
 a2dissite 000-default.conf
 a2ensite triangle-pos.conf
-a2enmod rewrite
 systemctl restart apache2
 
 # 7. Run Migrations
 echo "Running Migrations..."
-php artisan migrate --force
-php artisan db:seed --class=SuperUserSeeder
-php artisan storage:link
+php8.2 artisan migrate --force
+php8.2 artisan db:seed --class=SuperUserSeeder
+php8.2 artisan storage:link
 
 echo -e "${GREEN}Deployment Complete!${NC}"
 echo "Your app is live at: http://$(curl -s ifconfig.me)"
