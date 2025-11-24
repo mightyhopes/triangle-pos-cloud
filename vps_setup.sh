@@ -93,8 +93,8 @@ docker compose down # Stop if running
 docker compose up -d --build
 
 # 6. Run Migrations & Seed
-echo "Waiting for database to initialize (15s)..."
-sleep 15
+echo "Waiting for database to initialize (30s)..."
+sleep 30
 echo "Running migrations..."
 docker compose exec -T app php artisan migrate --force
 docker compose exec -T app php artisan db:seed --class=SuperUserSeeder
