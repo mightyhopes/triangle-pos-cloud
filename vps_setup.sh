@@ -6,6 +6,7 @@ APP_DIR="/var/www/triangle-pos"
 
 # Colors
 GREEN='\033[0;32m'
+RED='\033[0;31m'
 NC='\033[0m'
 
 echo -e "${GREEN}Starting Triangle POS VPS Setup...${NC}"
@@ -13,13 +14,34 @@ echo -e "${GREEN}Starting Triangle POS VPS Setup...${NC}"
 # 1. Update System
 echo "Updating system packages..."
 apt-get update && apt-get upgrade -y
+apt-get install -y ca-certificates curl gnupg lsb-release
 
-# 2. Install Docker & Docker Compose
+# 2. Install Docker (Manual Robust Method)
 if ! command -v docker &> /dev/null; then
     echo "Installing Docker..."
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sh get-docker.sh
-    rm get-docker.sh
+    
+    # Add Docker's official GPG key:
+    mkdir -p /etc/apt/keyrings
+    rm -f /etc/apt/keyrings/docker.gpg
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    chmod a+r /etc/apt/keyrings/docker.gpg
+
+    # Set up the repository:
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+      
+    apt-get update
+    
+    # Install Docker Engine (without the problematic docker-model-plugin)
+    apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    
+    if ! command -v docker &> /dev/null; then
+        echo -e "${RED}Docker installation failed. Please install Docker manually and re-run.${NC}"
+        exit 1
+    fi
+else
+    echo "Docker is already installed."
 fi
 
 # 3. Clone Repository
@@ -42,28 +64,29 @@ if [ ! -f .env ]; then
     DB_PASS=$(openssl rand -base64 12)
     APP_KEY="base64:$(openssl rand -base64 32)"
     
-    # Update .env
-    sed -i "s/DB_PASSWORD=/DB_PASSWORD=$DB_PASS/" .env
-    sed -i "s/DB_USERNAME=root/DB_USERNAME=triangle_user/" .env
-    sed -i "s/DB_DATABASE=triangle_pos/DB_DATABASE=triangle_pos/" .env
-    sed -i "s/APP_KEY=/APP_KEY=$(echo $APP_KEY | sed 's/\//\\\//g')/" .env
-    sed -i "s/APP_ENV=local/APP_ENV=production/" .env
-    sed -i "s/APP_DEBUG=true/APP_DEBUG=false/" .env
+    # Update .env (Using | as delimiter to avoid conflict with / in APP_KEY)
+    sed -i "s|DB_PASSWORD=|DB_PASSWORD=$DB_PASS|" .env
+    sed -i "s|DB_USERNAME=root|DB_USERNAME=triangle_user|" .env
+    sed -i "s|DB_DATABASE=triangle_pos|DB_DATABASE=triangle_pos|" .env
+    sed -i "s|APP_KEY=|APP_KEY=$APP_KEY|" .env
+    sed -i "s|APP_ENV=local|APP_ENV=production|" .env
+    sed -i "s|APP_DEBUG=true|APP_DEBUG=false|" .env
     
     echo -e "${GREEN}Generated secure passwords.${NC}"
 fi
 
 # 5. Start Application
 echo "Starting Docker containers..."
+docker compose down # Stop if running
 docker compose up -d --build
 
 # 6. Run Migrations & Seed
-echo "Waiting for database to initialize (10s)..."
-sleep 10
+echo "Waiting for database to initialize (15s)..."
+sleep 15
 echo "Running migrations..."
-docker compose exec app php artisan migrate --force
-docker compose exec app php artisan db:seed --class=SuperUserSeeder
-docker compose exec app php artisan storage:link
+docker compose exec -T app php artisan migrate --force
+docker compose exec -T app php artisan db:seed --class=SuperUserSeeder
+docker compose exec -T app php artisan storage:link
 
 echo -e "${GREEN}Deployment Complete!${NC}"
 echo "Your app should be live at: http://$(curl -s ifconfig.me)"
