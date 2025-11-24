@@ -63,6 +63,7 @@ if [ ! -f .env ]; then
     # Generate random passwords
     DB_PASS=$(openssl rand -base64 12)
     APP_KEY="base64:$(openssl rand -base64 32)"
+    VPS_IP=$(curl -s ifconfig.me)
     
     # Update .env (Using | as delimiter to avoid conflict with / in APP_KEY)
     sed -i "s|DB_PASSWORD=|DB_PASSWORD=$DB_PASS|" .env
@@ -71,8 +72,19 @@ if [ ! -f .env ]; then
     sed -i "s|APP_KEY=|APP_KEY=$APP_KEY|" .env
     sed -i "s|APP_ENV=local|APP_ENV=production|" .env
     sed -i "s|APP_DEBUG=true|APP_DEBUG=false|" .env
+    sed -i "s|APP_URL=http://localhost|APP_URL=http://$VPS_IP|" .env
     
-    echo -e "${GREEN}Generated secure passwords.${NC}"
+    # Add VPS_IP to .env for Docker Compose substitution
+    echo "VPS_IP=$VPS_IP" >> .env
+    
+    echo -e "${GREEN}Generated secure passwords and configured IP ($VPS_IP).${NC}"
+fi
+
+# Ensure VPS_IP is in .env if file already existed
+if ! grep -q "VPS_IP=" .env; then
+    VPS_IP=$(curl -s ifconfig.me)
+    echo "VPS_IP=$VPS_IP" >> .env
+    sed -i "s|APP_URL=http://localhost|APP_URL=http://$VPS_IP|" .env
 fi
 
 # 5. Start Application
