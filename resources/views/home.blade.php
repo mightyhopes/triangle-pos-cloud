@@ -12,6 +12,29 @@
 
 @section('content')
     <div class="container-fluid">
+        <!-- AI Insight Widget -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body d-flex align-items-center p-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 0.25rem;">
+                        <div class="mr-3 bg-white text-primary p-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="bi bi-lightbulb-fill font-2xl"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1 font-weight-bold">Business Insight (AI)</h5>
+                            <p class="mb-0" id="ai-insight-text">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Analyzing sales data...
+                            </p>
+                        </div>
+                        <button class="btn btn-light btn-sm rounded-pill px-3 font-weight-bold text-primary" onclick="fetchDailyInsight()">
+                            <i class="bi bi-arrow-clockwise mr-1"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         @can('show_total_stats')
         <div class="row">
             <div class="col-md-6 col-lg-3">
@@ -142,4 +165,31 @@
         });
     </script>
     @vite('resources/js/chart-config.js')
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchDailyInsight();
+        });
+
+        function fetchDailyInsight() {
+            const textElement = document.getElementById('ai-insight-text');
+            textElement.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Analyzing sales data...';
+
+            fetch("{{ route('ai.daily-insight') }}")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Parse **bold** to <strong>bold</strong>
+                        let formattedText = data.insight.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                        textElement.innerHTML = formattedText;
+                    } else {
+                        textElement.innerHTML = 'Gagal memuat saran. ' + (data.message || '');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    textElement.innerHTML = 'Gagal terhubung ke layanan AI.';
+                });
+        }
+    </script>
 @endpush

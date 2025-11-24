@@ -12,7 +12,7 @@ class AIService
 {
     public function generateDailyInsight()
     {
-        $apiKey = config('settings.gemini_api_key'); // We will add this config later
+        $apiKey = config('services.gemini.api_key');
         if (!$apiKey) {
             return "Please configure your Gemini API Key in System Settings to get AI insights.";
         }
@@ -49,13 +49,14 @@ class AIService
         - Top Selling Items: $top3String
         
         Analyze this performance and provide 1 short, actionable tip (max 2 sentences) for the owner to improve sales or operations tomorrow. 
-        Focus on marketing, inventory, or staff motivation. Do not be generic.";
+        Focus on marketing, inventory, or staff motivation. Do not be generic.
+        IMPORTANT: Answer in Indonesian language (Bahasa Indonesia) with a professional yet encouraging tone.";
 
         // 3. Call Gemini API
         try {
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
-            ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={$apiKey}", [
+            ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key={$apiKey}", [
                 'contents' => [
                     [
                         'parts' => [
@@ -69,7 +70,7 @@ class AIService
                 $data = $response->json();
                 return $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Could not generate insight.';
             } else {
-                return "Error calling AI API: " . $response->status();
+                return "Error calling AI API: " . $response->status() . " - " . $response->body();
             }
         } catch (\Exception $e) {
             return "Exception: " . $e->getMessage();

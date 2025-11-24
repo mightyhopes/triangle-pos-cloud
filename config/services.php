@@ -34,4 +34,8 @@ return [
         'database_url' => env('FIREBASE_DATABASE_URL'),
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+    ],
+
 ];
