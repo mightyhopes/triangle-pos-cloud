@@ -90,11 +90,9 @@ fi
 # 5. Start Application
 echo "Starting Docker containers..."
 docker compose down # Stop if running
-docker compose up -d --build
+docker compose up -d --wait --build
 
 # 6. Run Migrations & Seed
-echo "Waiting for database to initialize (30s)..."
-sleep 30
 echo "Running migrations..."
 docker compose exec -T app php artisan migrate --force
 docker compose exec -T app php artisan db:seed --class=SuperUserSeeder
