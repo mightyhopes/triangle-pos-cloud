@@ -43,6 +43,11 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u root -p$MYSQL_ROOT_PASSWORD || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - triangle_net
 
