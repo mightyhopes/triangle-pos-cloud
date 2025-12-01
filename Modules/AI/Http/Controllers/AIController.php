@@ -14,10 +14,11 @@ class AIController extends Controller
         $this->aiService = $aiService;
     }
 
-    public function getDailyInsight()
+    public function getDailyInsight(\Illuminate\Http\Request $request)
     {
         try {
-            $insight = $this->aiService->generateDailyInsight();
+            $days = $request->input('days', 1);
+            $insight = $this->aiService->generateDailyInsight($days);
             return response()->json([
                 'status' => 'success',
                 'insight' => $insight

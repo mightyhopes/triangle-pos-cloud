@@ -27,9 +27,16 @@
                                 Analyzing sales data...
                             </p>
                         </div>
-                        <button class="btn btn-light btn-sm rounded-pill px-3 font-weight-bold text-primary" onclick="fetchDailyInsight()">
-                            <i class="bi bi-arrow-clockwise mr-1"></i> Refresh
-                        </button>
+                        <div class="d-flex flex-column align-items-end">
+                            <div class="btn-group mb-2" role="group" aria-label="Time Range">
+                                <button type="button" class="btn btn-sm btn-light text-primary font-weight-bold" onclick="fetchDailyInsight(1)">1 Hari</button>
+                                <button type="button" class="btn btn-sm btn-outline-light font-weight-bold" onclick="fetchDailyInsight(3)">3 Hari</button>
+                                <button type="button" class="btn btn-sm btn-outline-light font-weight-bold" onclick="fetchDailyInsight(7)">7 Hari</button>
+                            </div>
+                            <button class="btn btn-light btn-sm rounded-pill px-3 font-weight-bold text-primary" onclick="fetchDailyInsight(1)">
+                                <i class="bi bi-arrow-clockwise mr-1"></i> Refresh
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -168,14 +175,25 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetchDailyInsight();
+            fetchDailyInsight(1);
         });
 
-        function fetchDailyInsight() {
+        function fetchDailyInsight(days = 1) {
             const textElement = document.getElementById('ai-insight-text');
-            textElement.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Analyzing sales data...';
+            textElement.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Analyzing sales data (' + days + ' days)...';
 
-            fetch("{{ route('ai.daily-insight') }}")
+            // Update active button state (optional UI polish)
+            document.querySelectorAll('.btn-group .btn').forEach(btn => {
+                if (btn.textContent.includes(days + ' Hari')) {
+                    btn.classList.remove('btn-outline-light');
+                    btn.classList.add('btn-light', 'text-primary');
+                } else {
+                    btn.classList.add('btn-outline-light');
+                    btn.classList.remove('btn-light', 'text-primary');
+                }
+            });
+
+            fetch("{{ route('ai.daily-insight') }}?days=" + days)
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {

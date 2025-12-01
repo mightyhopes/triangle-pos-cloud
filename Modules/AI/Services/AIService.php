@@ -10,19 +10,23 @@ use Carbon\Carbon;
 
 class AIService
 {
-    public function generateDailyInsight()
+    public function generateDailyInsight($days = 1)
     {
         $apiKey = config('services.gemini.api_key');
         if (!$apiKey) {
             return "Please configure your Gemini API Key in System Settings to get AI insights.";
         }
 
-        // 1. Gather Data (Yesterday's Sales)
-        $yesterday = Carbon::yesterday()->format('Y-m-d');
-        $sales = Sale::whereDate('date', $yesterday)->with('saleDetails')->get();
+        // 1. Gather Data (Last X Days)
+        $endDate = Carbon::yesterday();
+        $startDate = Carbon::yesterday()->subDays($days - 1);
+        
+        $sales = Sale::whereBetween('date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
+            ->with('saleDetails')
+            ->get();
 
         if ($sales->isEmpty()) {
-            return "No sales data found for yesterday ($yesterday). Make some sales to get insights!";
+            return "No sales data found for the last $days days (" . $startDate->format('d M') . " - " . $endDate->format('d M') . "). Make some sales to get insights!";
         }
 
         $totalRevenue = $sales->sum('total_amount');
@@ -42,13 +46,15 @@ class AIService
         $top3String = implode(', ', array_keys($top3));
 
         // 2. Construct Prompt
+        $periodText = ($days == 1) ? "yesterday (" . $endDate->format('Y-m-d') . ")" : "the last $days days (" . $startDate->format('Y-m-d') . " to " . $endDate->format('Y-m-d') . ")";
+        
         $prompt = "You are a business consultant for a retail store. 
-        Here is the sales summary for yesterday ($yesterday):
+        Here is the sales summary for $periodText:
         - Total Revenue: " . format_currency($totalRevenue) . "
         - Total Orders: $totalOrders
         - Top Selling Items: $top3String
         
-        Analyze this performance and provide 1 short, actionable tip (max 2 sentences) for the owner to improve sales or operations tomorrow. 
+        Analyze this performance and provide 1 short, actionable tip (max 2 sentences) for the owner to improve sales or operations. 
         Focus on marketing, inventory, or staff motivation. Do not be generic.
         IMPORTANT: Answer in Indonesian language (Bahasa Indonesia) with a professional yet encouraging tone.";
 
