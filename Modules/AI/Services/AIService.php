@@ -121,4 +121,18 @@ class AIService
 
         return $suggestions;
     }
+    public function getAvailableModels()
+    {
+        $apiKey = config('services.gemini.api_key');
+        if (!$apiKey) {
+            return ['error' => 'API Key not configured'];
+        }
+
+        try {
+            $response = Http::get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");
+            return $response->json();
+        } catch (\Exception $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
 }
