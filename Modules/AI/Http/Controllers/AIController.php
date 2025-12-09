@@ -30,9 +30,4 @@ class AIController extends Controller
             ], 500);
         }
     }
-
-    public function testModels()
-    {
-        return response()->json($this->aiService->getAvailableModels());
-    }
 }

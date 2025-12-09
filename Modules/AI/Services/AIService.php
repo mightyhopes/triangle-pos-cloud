@@ -62,7 +62,7 @@ class AIService
         try {
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
-            ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-001:generateContent?key={$apiKey}", [
+            ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={$apiKey}", [
                 'contents' => [
                     [
                         'parts' => [
@@ -120,19 +120,5 @@ class AIService
             ->get();
 
         return $suggestions;
-    }
-    public function getAvailableModels()
-    {
-        $apiKey = config('services.gemini.api_key');
-        if (!$apiKey) {
-            return ['error' => 'API Key not configured'];
-        }
-
-        try {
-            $response = Http::get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");
-            return $response->json();
-        } catch (\Exception $e) {
-            return ['error' => $e->getMessage()];
-        }
     }
 }
